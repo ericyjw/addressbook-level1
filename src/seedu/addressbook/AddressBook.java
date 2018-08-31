@@ -14,14 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 /*
  * NOTE : =============================================================
@@ -70,6 +63,7 @@ public class AddressBook {
     private static final String MESSAGE_COMMAND_HELP = "%1$s: %2$s";
     private static final String MESSAGE_COMMAND_HELP_PARAMETERS = "\tParameters: %1$s";
     private static final String MESSAGE_COMMAND_HELP_EXAMPLE = "\tExample: %1$s";
+    private static final String MESSAGE_LUCKY = "LUCKY PERSON IS: ";
     private static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Person: %1$s";
     private static final String MESSAGE_DISPLAY_PERSON_DATA = "%1$s  Phone Number: %2$s  Email: %3$s";
     private static final String MESSAGE_DISPLAY_LIST_ELEMENT_INDEX = "%1$d. ";
@@ -124,6 +118,10 @@ public class AddressBook {
     private static final String COMMAND_CLEAR_WORD = "clear";
     private static final String COMMAND_CLEAR_DESC = "Clears address book permanently.";
     private static final String COMMAND_CLEAR_EXAMPLE = COMMAND_CLEAR_WORD;
+
+    private static final String COMMAND_LUCKY_WORD = "lucky";
+    private static final String COMMAND_LUCKY_DESC = "A random person in the address book will be chosen.";
+    private static final String COMMAND_LUCKY_EXAMPLE = COMMAND_LUCKY_WORD;
 
     private static final String COMMAND_HELP_WORD = "help";
     private static final String COMMAND_HELP_DESC = "Shows program usage instructions.";
@@ -381,11 +379,25 @@ public class AddressBook {
             return executeClearAddressBook();
         case COMMAND_HELP_WORD:
             return getUsageInfoForAllCommands();
+        case COMMAND_LUCKY_WORD:
+            return chooseLuckyPerson();
         case COMMAND_EXIT_WORD:
             executeExitProgramRequest();
         default:
             return getMessageForInvalidCommandInput(commandType, getUsageInfoForAllCommands());
         }
+    }
+
+    private static String chooseLuckyPerson() {
+        Random rnd = new Random();
+        int luckyIndex = rnd.nextInt(ALL_PERSONS.size()-1);
+        String[] luckyPerson= ALL_PERSONS.get(luckyIndex);
+
+        return getMessageForLuckyPerson(luckyPerson);
+    }
+
+    private static String getMessageForLuckyPerson(String[] luckyPerson) {
+        return MESSAGE_LUCKY + luckyPerson[0] + ", " + luckyPerson[1] + ", " + luckyPerson[2];
     }
 
     /**
